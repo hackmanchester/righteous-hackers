@@ -4,6 +4,7 @@ import os
 import json
 from subprocess import Popen, PIPE
 from logging import getLogger
+from pusher import Pusher
 
 from django.conf import settings
 
@@ -41,6 +42,9 @@ class TubeWrapper(object):
         
         if not os.path.isfile(self.script_path) and self.invocation_method == "stdin":
             log.error("Couldn't find the tube script for %s", self.name)
+        
+        if self.is_async:
+            self.pusher = Pusher(**settings.PUSHER_CONFIG)
     
     
     @property
@@ -75,4 +79,18 @@ class TubeWrapper(object):
     def invoke_pusher(self, message):
         log.debug("Should use pusher to send a message to %s", self.name)
         message['target'] = self.name
+        self.pusher['messages'].trigger("input", message)
         
+
+
+class TubeDispatcher(object):
+    pass
+
+
+
+
+
+
+
+
+

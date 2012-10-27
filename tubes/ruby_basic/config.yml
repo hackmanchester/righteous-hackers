@@ -1,5 +1,5 @@
 name: ruby_basic
 description: >
     a ruby script that doesn't transform the message.
-invocation_method: stdin 
+invocation_method: stdin
 result_method: pusher

@@ -3,4 +3,4 @@ south
 django_extensions
 # libyaml must be installed too
 pyyaml
-
+pusher
