@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'json'
+
+data = JSON.parse STDIN.read
+
+puts "#{JSON.generate data}"

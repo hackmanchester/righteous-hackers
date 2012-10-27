@@ -1,0 +1,5 @@
+name: ruby-basic
+description: >
+	This is a basic ruby tube.
+invocation_method: stdin 
+result_method: stdout
