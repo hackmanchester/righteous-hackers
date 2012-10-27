@@ -1,5 +1,8 @@
 # Django settings for dispatcher project.
 import os
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(name)s %(levelname)s %(message)s")
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -126,10 +129,13 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django_extensions",
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'dispatcher.utils',
+    'south',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -158,5 +164,11 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'dispatcher': {
+            'level': "DEBUG"
+        }
     }
 }
+
+
+TUBES_ROOT = rtoa("../../tubes/")
