@@ -1,4 +1,5 @@
 name: lua_tube
+status: stable
 invocation_method: stdin
 result_method: stdout
 description: >

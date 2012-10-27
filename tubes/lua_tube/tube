@@ -2,10 +2,12 @@
 
 sf=string.format
 json = require("json")
+require("base64")
 
 inStr = io.read()
 jsonObj = json.decode(inStr)
 
+jsonObj.payload = to_base64(jsonObj.payload)
 
-print(jsonObj.id)
-print(jsonObj.payload)
+jsonStr = json.encode(jsonObj)
+print(jsonStr)
