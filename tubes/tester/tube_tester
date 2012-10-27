@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'optparse'
+require 'json'
+require 'colorize'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: tube_tester [options]"
+
+  opts.on("-t", "--tube [TUBE]", "Tube name") do |tube|
+    options[:tube] = tube
+  end
+end.parse!
+
+if (options[:tube]) then
+  json_file = JSON.generate({ :id => 1234, :payload => "The quick brown fox jumped over the lazy dogs." })
+
+  result = `echo '#{json_file}' | #{options[:tube]}`
+
+  json_result = JSON.parse result
+  the_id = json_result["id"]
+  the_payload = json_result["payload"]
+
+  id_matches = (the_id == 12345)
+  payload_matches = (the_payload.start_with? "The quick brown fox jumped over the lazy dogs.")
+
+  if id_matches then
+  	puts "Id matches".green
+  else 
+  	puts "Id does not match\n#{the_id} does not match 12345.".red
+  end
+
+  if payload_matches then
+  	puts "Payload matches".green 
+  else
+  	puts "Payload does not match\n#{the_payload} does not match 'The quick brown fox jumped over the lazy dogs.".red
+  end
+end
