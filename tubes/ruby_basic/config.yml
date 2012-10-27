@@ -1,5 +1,5 @@
 name: ruby_basic
 description: >
-	This is a basic ruby tube.
+    a ruby script that doesn't transform the message.
 invocation_method: stdin 
-result_method: stdout
+result_method: pusher

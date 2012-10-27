@@ -1,7 +1,20 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'json'
+require 'pusher'
+require 'yaml'
 
-data = JSON.parse STDIN.read
+# data = JSON.parse STDIN.read
 
-puts "#{JSON.generate data}"
+# puts "#{JSON.generate data}"
+
+tube_config = YAML.load_file('config.yml')
+append_text = tube_config["description"]
+json_input = JSON.parse STDIN.read
+
+Pusher.app_id = '30507'
+Pusher.key = 'afefd11a8f69dd2a425d'
+Pusher.secret = '6f034e7a52ece851ea77'
+
+Pusher['messages'].trigger('output', {:id => json_input["id"],
+								      :payload => "#{json_input["payload"]}\n#{append_text}" }) 
