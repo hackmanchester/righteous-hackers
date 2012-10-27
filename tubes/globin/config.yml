@@ -1,4 +1,4 @@
-name:			globin
-invocation_method: 	stdin
-result_method: 		stdout
-description: 		globins!
+name:               globin
+invocation_method:  stdin
+result_method:      stdout
+description:        globins!

@@ -2,13 +2,10 @@
 
 import sys
 
-
 def main():
-	msg = sys.stdin.readline()
-
-	gsm = msg.encode('rot13')
-
-	sys.stdout.write(gsm)
+    msg = sys.stdin.readline()
+    gsm = msg.encode('rot13')
+    sys.stdout.write(gsm)
 
 if __name__ == '__main__':
-	main()
+    main()
