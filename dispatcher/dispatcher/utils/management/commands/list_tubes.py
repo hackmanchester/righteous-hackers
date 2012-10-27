@@ -11,5 +11,3 @@ log = getLogger(__name__)
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         log.debug("Available tubes: %s", ", ".join(list_tubes()))
-        dispatcher = TubeDispatcher()
-        dispatcher.run()

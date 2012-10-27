@@ -5,6 +5,8 @@ import json
 from subprocess import Popen, PIPE
 from logging import getLogger
 from pusher import Pusher
+import pusherclient
+import time
 
 from django.conf import settings
 
@@ -83,8 +85,40 @@ class TubeWrapper(object):
         
 
 
+
 class TubeDispatcher(object):
-    pass
+    pusher = None
+    
+    def run(self):
+        if not self.pusher:
+            self.connect()
+        
+        while True:
+            time.sleep(1)
+    
+    
+    def connect(self):
+        if self.pusher:
+            return
+        
+        connection = None
+        
+        def connection_handler(data):
+            channel = connection.subscribe("messages")
+            channel.bind("input", self.input_received)
+            channel.bind("output", self.output_received)
+        
+        connection = pusherclient.Pusher(settings.PUSHER_CONFIG['key'])
+        connection.connection.bind('pusher:connection_established', connection_handler)
+        
+    
+    def input_received(self, *args, **kwargs):
+        log.debug(args)
+        log.debug(kwargs)
+
+    def output_received(self, *args, **kwargs):
+        log.debug(args)
+        log.debug(kwargs)
 
 
 

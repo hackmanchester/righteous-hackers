@@ -4,3 +4,6 @@ django_extensions
 # libyaml must be installed too
 pyyaml
 pusher
+-e git+https://github.com/ekulyk/PythonPusherClient#egg=pusherclient
+# websocket
+-e git+https://github.com/ekulyk/websocket-client#egg=websocket
