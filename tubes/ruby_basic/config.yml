@@ -1,4 +1,4 @@
-name: ruby-basic
+name: ruby_basic
 description: >
 	This is a basic ruby tube.
 invocation_method: stdin 
