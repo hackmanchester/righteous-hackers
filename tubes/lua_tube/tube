@@ -1,0 +1,11 @@
+#!/usr/local/bin/lua 
+
+sf=string.format
+json = require("json")
+
+inStr = io.read()
+jsonObj = json.decode(inStr)
+
+
+print(jsonObj.id)
+print(jsonObj.payload)

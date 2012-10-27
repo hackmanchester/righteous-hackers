@@ -1,0 +1,5 @@
+name: lua_tube
+invocation_method: stdin
+result_method: stdout
+description: >
+    This is a basic lua tube.
