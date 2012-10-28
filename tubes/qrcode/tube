@@ -29,7 +29,7 @@ socket['messages'].bind('input') do |data|
   json_input = JSON.parse data
 
   if (json_input["target"] == "qrcode") then
-  	payload = URI::encode("#{json_input["payload"]}\n#{append_text}")
+  	payload = URI::encode("#{json_input["payload"]}")
 
   	Pusher['messages'].trigger('processing', {:id => json_input["id"],
 									 :payload => "payload", 

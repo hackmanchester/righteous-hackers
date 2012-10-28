@@ -22,24 +22,24 @@ class MulticoderTube(BaseTube):
     
     def hexEncode(self, msg, message):
         self.processing(message, "Hex", self.safe_unicode(msg.encode('hex', 'replace')))
-        return self.bz2Encode(msg, message)+'Hex encoded,'
+        return self.bz2Encode(msg, message)+'\nLanguage: Python, Encoding: Hex, '
         #return msg+ 'Hexencoded!'
     
     def bz2Encode(self, msg, message):
         self.processing(message, "BZ2", self.safe_unicode(msg.encode('bz2_codec', 'replace')))
-        return self.uuEncode(msg, message)+'BZ2 encoded,'
+        return self.uuEncode(msg, message)+'BZ2, '
     
     def uuEncode(self, msg, message):
         self.processing(message, "UU", self.safe_unicode(msg.encode('uu_codec', 'replace')))
-        return self.gzipEncode(msg, message)+'UU encoded,'
+        return self.gzipEncode(msg, message)+'UU, '
     
     def gzipEncode(self, msg, message):
         self.processing(message, "Zip", self.safe_unicode(msg.encode('zlib_codec', 'replace')))
-        return self.punyEncode(msg, message)+'Zip encoded,'
+        return self.punyEncode(msg, message)+' Zip, '
     
     def punyEncode(self, msg, message):
         self.processing(message, "Punycode", self.safe_unicode(msg.encode('punycode', 'replace')))
-        return msg+'Punycoded,'
+        return msg+' Punycode.'
     
     def safe_unicode(obj, *args):
         try:

@@ -1,7 +1,7 @@
 name: qrcode
 display_name: QR code printer / scanner
 description: >
-    encodes the message into a QR code and prints it out, then scans it back in through an iPhone
+    Encodes the message into a QR code, prints it out over Bluetooth, then scans it back in through an iPhone
 invocation_method: pusher 
 result_method: pusher
 status: unstable
