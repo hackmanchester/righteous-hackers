@@ -1,0 +1,5 @@
+name: launchpad
+invocation_method: pusher
+result_method: pusher
+description: Displays a message encryption key on the Launchpad that the user must echo back
+status: stable
