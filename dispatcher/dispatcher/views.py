@@ -7,6 +7,8 @@ from django.views.generic import TemplateView, View
 from django.http import HttpResponse
 from django.conf import settings
 
+from dispatcher.utils import list_tubes
+
 log = getLogger(__name__)
 
 class IndexView(TemplateView):
@@ -25,3 +27,8 @@ class PusherAuthView(View):
         log.debug(auth)
         return HttpResponse(auth)
 pusher_auth = PusherAuthView.as_view()
+
+class TubeList(View):
+    def get(self, *args, **kwargs):
+        return HttpResponse(json.dumps(list_tubes()))
+tube_list = TubeList.as_view()

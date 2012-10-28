@@ -1,0 +1,5 @@
+name: ssh_bouncer
+invocation_method: stdin
+result_method: stdout
+status: stable
+description: tube that bounces the message off an SSH host
