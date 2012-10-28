@@ -103,7 +103,7 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
@@ -172,3 +172,10 @@ LOGGING = {
 
 
 TUBES_ROOT = rtoa("../../tubes/")
+
+
+PUSHER_CONFIG = {
+    "app_id": '30507',
+    "key": 'afefd11a8f69dd2a425d',
+    "secret": '6f034e7a52ece851ea77'
+}

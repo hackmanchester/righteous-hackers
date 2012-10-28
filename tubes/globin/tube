@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
 import sys
+import json
 
 def main():
     msg = sys.stdin.readline()
-    gsm = msg.encode('rot13')
-    sys.stdout.write(gsm)
+    jsonObj = json.loads(msg)
+    jsonObj['payload'] = jsonObj['payload'].encode('rot13')
+    sys.stdout.write(json.dumps(jsonObj)+"\n")
 
 if __name__ == '__main__':
     main()

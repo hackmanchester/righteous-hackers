@@ -1,3 +1,20 @@
 html {
     font-family: "Helvetica", Arial, sans-serif;
 }
+
+#messages tr.input td {
+    background-color: #AAC9DB;
+}
+
+#messages tr.output td {
+    background-color: #DCDEA0;
+}
+
+#messages tr.processing td {
+    background-color: #DEB694;
+}
+
+#messages tr.finished td {
+    background-color: #9ED58C;
+}
+

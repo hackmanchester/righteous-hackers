@@ -1,0 +1,1 @@
+move all .lua files either into dir where lua is being run, or lu install dir (/usr/local/share/lua/5.1/ on my mac)

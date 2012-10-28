@@ -1,5 +1,6 @@
 name: python_test
 invocation_method: stdin
 result_method: stdout
+status: stable
 description: >
     This is a basic python tube.

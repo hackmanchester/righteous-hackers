@@ -1,9 +1,9 @@
 from logging import getLogger
-import random
+from pusher import Pusher
 
 from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
 
-from dispatcher.utils import list_tubes, TubeWrapper
 
 log = getLogger(__name__)
 
@@ -11,11 +11,13 @@ log = getLogger(__name__)
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         print "Enter your message: "
-        msg = raw_input()
-        tubes = list_tubes()
-        tube = TubeWrapper(random.choice(tubes))
+        payload = raw_input()
         
-        log.debug("Sending your message to tube '%s'" % tube.name)
+        message = {
+            "payload": payload,
+            "target": "dispatcher"
+        }
         
-        log.debug("Result: %s" % tube.process(msg))
+        pusher = Pusher(**settings.PUSHER_CONFIG)
         
+        pusher['private-messages'].trigger('client-input', message)

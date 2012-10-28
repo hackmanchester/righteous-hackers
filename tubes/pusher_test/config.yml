@@ -1,0 +1,6 @@
+name: pusher_test
+invocation_method: pusher
+result_method: pusher
+status: unstable
+description: noop tube that sends/receives via pusher
+

@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+
+import serial
+import sys
+import json
+
+SERIALPORT = '/dev/tty.usbserial-A8004Iy6'
+ser = serial.Serial(port=SERIALPORT, timeout=10, baudrate = 9600)
+ser.flushInput()
+ser.flushOutput()
+
+msg = ""
+fails = 0
+
+def main():
+    global msg
+    msg = sys.stdin.readline()
+    sendString(msg)
+    
+def sendString(myMsg):
+    jsonObj = json.loads(myMsg)
+    jsonObj['payload'] = jsonObj['payload'].encode('rot13')
+    ser.flushInput()
+    ser.flushOutput()
+    ser.write(json.dumps(jsonObj)+"\n")
+    waitForResponce()
+
+def waitForResponce():
+    global fails
+    inString = ser.readline()
+    print inString
+    
+    try:
+      jsonObj = json.loads(inString)
+      jsonObj['payload'] = jsonObj['payload'].encode('rot13')
+      sys.stdout.write(json.dumps(jsonObj)+"\n")
+      print fails
+    except ValueError as ex:
+      print ex
+      fails = fails + 1
+      sendString(msg)
+
+    
+
+if __name__ == '__main__':
+    main()
+    

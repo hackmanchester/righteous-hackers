@@ -1,0 +1,6 @@
+name:               arduino_loop
+status:             stable
+invocation_method:  stdin
+result_method:      stdout
+description: >
+    Basic Python & Arduino tube that 

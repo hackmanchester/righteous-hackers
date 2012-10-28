@@ -1,0 +1,5 @@
+name:               go_tube
+status:             unstable
+invocation_method:  stdin
+result_method:      stdout
+description:        go tubez!
