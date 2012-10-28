@@ -131,7 +131,7 @@ class TubeDispatcher(object):
             channel.bind("output", self.output_received)
             
             private_channel = self.pusherclient.subscribe(PRIVATE_CHANNEL_NAME)
-            private_channel.bind("client-input", self.private_input_received)
+            private_channel.bind("client-input", lambda m: self._bounce(CHANNEL_NAME, "input", m))
         
         self.pusherclient = pusherclient.Pusher(settings.PUSHER_CONFIG['key'], secret=settings.PUSHER_CONFIG['secret'])
         self.pusherclient.connection.bind('pusher:connection_established', connection_handler)
@@ -142,11 +142,9 @@ class TubeDispatcher(object):
         
         self.pusher = Pusher(**settings.PUSHER_CONFIG)
         
-    
-    def private_input_received(self, data):
-        message = json.loads(data)
-        self.pusher['messages'].trigger("input", message)
-    
+    def _bounce(self, channel, event, message):
+        self.pusher[channel].trigger(event, json.loads(message))
+        
     def input_received(self, data):
         message = json.loads(data)
         if 'target' in message and message['target'] == "dispatcher":
