@@ -1,0 +1,6 @@
+name: qrcode
+description: >
+    encodes the message into a QR code and prints it out, then scans it back in through an iPhone
+invocation_method: stdin 
+result_method: pusher
+status: unstable

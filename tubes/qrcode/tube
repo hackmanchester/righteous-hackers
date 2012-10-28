@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'json'
+require 'pusher'
+require 'yaml'
+require 'net/http'
+require 'open-uri'
+require 'pusher-client'
+
+# data = JSON.parse STDIN.read
+
+# puts "#{JSON.generate data}"
+
+tube_config = YAML.load_file('config.yml')
+append_text = tube_config["description"]
+
+Pusher.app_id = '30507'
+Pusher.key = 'afefd11a8f69dd2a425d'
+Pusher.secret = '6f034e7a52ece851ea77'
+
+PusherClient.logger = Logger.new(STDOUT)
+socket = PusherClient::Socket.new(Pusher.key)
+
+# Subscribe to a channel
+socket.subscribe('messages')
+
+# Bind to a channel event
+socket['messages'].bind('input') do |data|
+  json_input = JSON.parse data
+
+  if (json_input["target"] == "qrcode") then
+  	payload = URI::encode("#{json_input["payload"]}\n#{append_text}")
+
+  	Pusher['messages'].trigger('processing', {:id => json_input["id"],
+									 :payload => "payload", 
+									 :sender => "qrcode",
+									 :encoding_scheme => "QR code",
+									 :encoded_payload => "http://chart.apis.google.com/chart?cht=qr&chs=300x300&chld=L&choe=UTF-8&chl=#{payload}"}) 
+
+
+	Net::HTTP.start("chart.apis.google.com") do |http|
+	    resp = http.get("/chart?cht=qr&chs=300x300&chld=L&choe=UTF-8&chl=#{payload}")
+	    open("qrcode.png", "wb") do |file|
+	        file.write(resp.body)
+	    end
+	end
+
+	`convert qrcode.png -gravity center -background white -extent 450x300 output.jpg`
+
+	`osascript printer.scpt`
+
+  	Pusher['messages'].trigger('processing', {:id => json_input["id"],
+								 :payload => "payload", 
+								 :sender => "qrcode",
+								 :encoding_scheme => "QR code (printed)",
+								 :encoded_payload => "Paper-bound"}) 
+  end
+end
+
+socket.connect
