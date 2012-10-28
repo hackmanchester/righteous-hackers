@@ -1,0 +1,3 @@
+$> sudo cpan
+$> install JSON
+$> install JSON::XS

@@ -154,7 +154,10 @@ class TubeDispatcher(object):
     def output_received(self, data):
         message = json.loads(data)
         message['through_tubes'].append(message['sender'])
-        del(message['sender'])
+        if 'sender' in message:
+            del(message['sender'])
+        if 'target' in message:
+            del(message['target'])
         self.process_message(message)
         
     
@@ -182,7 +185,6 @@ class TubeDispatcher(object):
             result = tube.process(message)
             result['sender'] = tube.name
             self.pusher[CHANNEL_NAME].trigger("output", result)
-            # self.output_received(json.dumps(result))
         
     def pick_tube_for_message(self, message):
         log.debug("Picking a tube for %s", message)

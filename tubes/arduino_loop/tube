@@ -33,7 +33,8 @@ def waitForResponce():
     try:
       jsonObj = json.loads(inString)
       jsonObj['payload'] = jsonObj['payload'].encode('rot13')
-      sys.stdout.write(json.dumps(jsonObj)+"\n")
+      jsonObj['payload'] += " USB, RS232, Arduino, I2C, SPI, ASCII, ROT13"
+      sys.stdout.write(json.dumps(jsonObj) + "/n")
       print fails
     except ValueError as ex:
       print ex

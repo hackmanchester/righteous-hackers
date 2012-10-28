@@ -7,6 +7,7 @@ from django.conf.urls import patterns, include, url
 urlpatterns = patterns('',
     url(r'^$', 'dispatcher.views.index'),
     url(r'^pusher/auth$', 'dispatcher.views.pusher_auth'),
+    url(r'^api/tube_list$', 'dispatcher.views.tube_list'),
     
     # Examples:
     # url(r'^$', 'dispatcher.views.home', name='home'),
