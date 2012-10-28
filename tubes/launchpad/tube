@@ -49,24 +49,25 @@ class LaunchpadTube(BaseTube):
         self.launchpad = l
         self.flashLights()
     
-    def flashLights(self):
-        for x in range(9):
-            for y in range(9):
-                self.launchpad.light(x, y, min(x/2, 3), min(y/2, 3))
-        time.sleep(0.3)
-        for x in range(9):
-            for y in range(9):
-                self.launchpad.light(x, y, min(y/2, 3), min(x/2, 3))
-        time.sleep(0.3)
+    def flashLights(self, count=1):
+        for i in range(count):
+            for x in range(9):
+                for y in range(9):
+                    self.launchpad.light(x, y, min(x/2, 3), min(y/2, 3))
+            time.sleep(0.3)
+            for x in range(9):
+                for y in range(9):
+                    self.launchpad.light(x, y, min(y/2, 3), min(x/2, 3))
+            time.sleep(0.3)
 
-        for x in range(9):
-            for y in range(9):
-                self.launchpad.light(x, y, 3-min(x/2, 3), 3-min(y/2, 3))
-        time.sleep(0.3)
-        for x in range(9):
-            for y in range(9):
-                self.launchpad.light(x, y, 3-min(y/2, 3), 3-min(x/2, 3))
-        time.sleep(0.3)
+            for x in range(9):
+                for y in range(9):
+                    self.launchpad.light(x, y, 3-min(x/2, 3), 3-min(y/2, 3))
+            time.sleep(0.3)
+            for x in range(9):
+                for y in range(9):
+                    self.launchpad.light(x, y, 3-min(y/2, 3), 3-min(x/2, 3))
+            time.sleep(0.3)
         self.launchpad.lightAllTest(0, 0)
         
         
@@ -204,6 +205,9 @@ class LaunchpadTube(BaseTube):
             x, y, pushed = event
             if pushed and x == 8 and y == 0:
                 self.finished_key_entry()
+                continue
+            if pushed and x == 8 and y == 7:
+                self.flashLights(5)
                 continue
             if x > 7 or y > 7:
                 continue
