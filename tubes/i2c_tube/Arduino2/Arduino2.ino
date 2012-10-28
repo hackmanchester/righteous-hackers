@@ -26,6 +26,7 @@ void setup() {
   Wire.begin(9);                // Start I2C Bus as a Slave (Device Number 9)
   Wire.onReceive(receiveEvent);
   lcd.begin(20, 4); // register event
+  lcd.autoscroll();
   lcd.print("Go!");
 }
 

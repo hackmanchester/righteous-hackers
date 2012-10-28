@@ -1,9 +1,20 @@
 
+#include <Wire.h>
+#include <SPI.h>
+#define LED_PIN 13
+
 int serIn;
 
 void setup()
 {
-  // start serial port at 9600 bps:
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
+  
+  pinMode(MISO, OUTPUT);
+  SPCR |= _BV(SPE);
+  SPCR |= _BV(SPIE);
+  SPI.attachInterrupt();
+  Wire.begin();
   Serial.begin(9600);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
@@ -16,8 +27,14 @@ void loop()
   if (Serial.available() > 0) {
     // get incoming byte:
     serIn = Serial.read();
-    if(serIn > 64 && serIn < 91){
-      Serial.print('Caps!');
-    }      
+    Wire.beginTransmission(9); // transmit to device #9
+    Wire.write(serIn);              // sends x 
+    Wire.endTransmission();    // stop transmitting
   }
+}
+
+ISR (SPI_STC_vect)
+{
+  char c = SPDR;
+  Serial.print(c);
 }
