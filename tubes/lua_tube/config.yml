@@ -1,6 +1,6 @@
 name: lua_tube
-status: unstable
+status: stable
 invocation_method: stdin
 result_method: stdout
 description: >
-    Basic lua tube that base64 encodes the input payload
+    Basic lua tube that base64 encodes & decodes the input payload

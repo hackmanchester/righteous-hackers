@@ -1,6 +1,6 @@
 name:               perl_tube
-status:             unstable
+status:             stable
 invocation_method:  stdin
 result_method:      stdout
 description: >
-    Basic Perl echo tube
+    Basic Perl echo tubez

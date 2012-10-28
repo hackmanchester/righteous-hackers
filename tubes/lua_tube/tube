@@ -11,7 +11,7 @@ jsonObj.payload = to_base64(jsonObj.payload)
 
 jsonObj.payload = from_base64(jsonObj.payload)
 
-jsonObj.payload = jsonObj.payload .. " Lua/base64"
+jsonObj.payload = jsonObj.payload .. " Lot's of love, Lua & base64"
 
 jsonStr = json.encode(jsonObj)
 print(jsonStr)
