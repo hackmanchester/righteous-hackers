@@ -15,6 +15,7 @@ class BaseTube(object):
     
     pusher = None
     pusherclient = None
+    sleep_length = 1
     
     def __init__(self, name):
         self.name = name
@@ -23,7 +24,11 @@ class BaseTube(object):
     
     def run(self):
         while True:
-            time.sleep(1)
+            self.tick()
+            time.sleep(self.sleep_length)
+    
+    def tick(self):
+        pass
 
     def connectclient(self):
         if self.pusherclient:
@@ -47,9 +52,13 @@ class BaseTube(object):
     def input_received(self, message):
         message = json.loads(message)
         if message.get("target") == self.name:
+            del(message['target'])
             self.handle(message)
     
     def handle(self, message):
+        self.return_message(message)
+    
+    def return_message(self, message):
         if 'target' in message:
             del(message['target'])
         message['sender'] = self.name

@@ -10,9 +10,29 @@ log = logging.getLogger(__name__)
 
 
 class LaunchpadTube(BaseTube):
+    launchpad = None
+    sleep_length = 0.05
+    
+    def __init__(self, *args, **kwargs):
+        super(LaunchpadTube, self).__init__(*args, **kwargs)
+        self.setupLaunchPad()
+    
+    def setupLaunchPad(self):
+        launchPads = launchpad.findLaunchpads()
+        l = launchpad.launchpad(*launchPads[-1])
+        
+        l.reset()
+        l.setDrumRackMode()
+        self.launchpad = l
+        
     def handle(self, message):
         payload = message['payload']
         log.debug("payload")
+        self.processing(message, "lolcats", "LOLOLOLOLOLOLOL")
+        self.return_message(message)
+    
+    def tick(self):
+        self.launchpad.poll()
 
 
 def main():

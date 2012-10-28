@@ -132,6 +132,7 @@ class TubeDispatcher(object):
             
             private_channel = self.pusherclient.subscribe(PRIVATE_CHANNEL_NAME)
             private_channel.bind("client-input", lambda m: self._bounce(CHANNEL_NAME, "input", m))
+            private_channel.bind("client-output", lambda m: self._bounce(CHANNEL_NAME, "output", m))
         
         self.pusherclient = pusherclient.Pusher(settings.PUSHER_CONFIG['key'], secret=settings.PUSHER_CONFIG['secret'])
         self.pusherclient.connection.bind('pusher:connection_established', connection_handler)
