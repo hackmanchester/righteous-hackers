@@ -12,7 +12,9 @@
             tr.append($("<td></td>").text(message.encoding_scheme))
             tr.append($("<td></td>").text(message.encoded_payload))
             tr.append($("<td></td>").text(message.target || message.sender))
-            tr.append($("<td></td>").text(message.payload))
+            var code = $("<code></code>").text(message.payload)
+            var td = $("<td></td>").append(code)
+            tr.append(td)
             
             $("#messages tr.header").after(tr)
         }

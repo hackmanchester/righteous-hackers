@@ -5,3 +5,4 @@ dispatcher: ./manage.py runtubes
 watch: watch.rb . localhost
 # smtpd: python -m smtpd -n -c DebuggingServer localhost:1025
 # celeryd: ./manage.py celeryd -E -l info
+launchpad: ../tubes/launchpad/tube

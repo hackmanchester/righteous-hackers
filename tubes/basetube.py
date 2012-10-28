@@ -72,13 +72,13 @@ class BaseTube(object):
     
     def append_appendix(self, message):
         if self.languages:
-            message['payload'] += "\nLanguages: %s" % self.languages
+            message['payload'] += "\nLanguages: %s\n" % self.languages
         if self.protocols:
-            message['payload'] += "\nProtocols: %s" % self.protocols
+            message['payload'] += "\nProtocols: %s\n" % self.protocols
         if self.transports:
-            message['payload'] += "\nTransports: %s" % self.transports
+            message['payload'] += "\nTransports: %s\n" % self.transports
         if self.encodings:
-            message['payload'] += "\nEncodings: %s" % self.encodings
+            message['payload'] += "\nEncodings: %s\n" % self.encodings
         
         return message
     
