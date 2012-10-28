@@ -16,5 +16,7 @@ Pusher.app_id = '30507'
 Pusher.key = 'afefd11a8f69dd2a425d'
 Pusher.secret = '6f034e7a52ece851ea77'
 
-Pusher['messages'].trigger('output', {:id => json_input["id"],
-								      :payload => "#{json_input["payload"]}\n#{append_text}" }) 
+json_input["payload"] << "\n#{append_text}"
+json_input["sender"] = tube_config["name"]
+
+Pusher['messages'].trigger('output', json_input) 

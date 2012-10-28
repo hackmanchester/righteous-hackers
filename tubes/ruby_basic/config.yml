@@ -3,3 +3,5 @@ description: >
     a ruby script that doesn't transform the message.
 invocation_method: stdin
 result_method: pusher
+status: stable
+

@@ -1,5 +1,5 @@
 name:               globin
-status:             stable
+status:             unstable
 invocation_method:  stdin
 result_method:      stdout
 description:        globins!

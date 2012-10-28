@@ -7,16 +7,20 @@ from logging import getLogger
 from pusher import Pusher
 import pusherclient
 import time
+from hashlib import md5
+import random
 
 from django.conf import settings
 
 log = getLogger(__name__)
 
+INCLUDE_UNSTABLE = False
+
 def list_tubes():
     tubes = []
     for config in glob.glob(settings.TUBES_ROOT + "/*/config.yml"):
         parsed = parse_config(config)
-        if parsed:
+        if parsed and (parsed.get('status') == "stable" or INCLUDE_UNSTABLE):
             tubes.append(parsed)
     return [tube['name'] for tube in tubes]
 
@@ -76,6 +80,14 @@ class TubeWrapper(object):
         encoded = json.dumps(message)
         proc = Popen([self.script_path], stdin=PIPE, stdout=PIPE, cwd=os.path.dirname(self.script_path))
         result = proc.communicate(input=encoded)[0]
+        if not self.is_async:
+            try:
+                result = json.loads(result)
+            except:
+                log.error("Couldn't get a JSON object from the tube's output...")
+                log.error(result)
+                return message
+        log.debug("Result: %s", result)
         return result
     
     def invoke_pusher(self, message):
@@ -88,6 +100,10 @@ class TubeWrapper(object):
 
 class TubeDispatcher(object):
     pusher = None
+    tubes = None
+    
+    def __init__(self):
+        self.tubes = {name: TubeWrapper(name) for name in list_tubes()}
     
     def run(self):
         if not self.pusher:
@@ -112,13 +128,56 @@ class TubeDispatcher(object):
         connection.connection.bind('pusher:connection_established', connection_handler)
         
     
-    def input_received(self, *args, **kwargs):
-        log.debug(args)
-        log.debug(kwargs)
+    def input_received(self, data):
+        message = json.loads(data)
+        if 'target' in message and message['target'] == "dispatcher":
+            self.new_message(message['payload'])
+        
 
-    def output_received(self, *args, **kwargs):
-        log.debug(args)
-        log.debug(kwargs)
+    def output_received(self, data):
+        message = json.loads(data)
+        message['through_tubes'].append(message['sender'])
+        del(message['sender'])
+        self.process_message(message)
+        
+    
+    
+    def new_message(self, payload):
+        message = {
+            "id": md5(payload).hexdigest(),
+            "payload": payload,
+            "through_tubes": []
+        }
+        self.process_message(message)
+    
+    def process_message(self, message):
+        log.debug("Processing message: %s", message)
+        tube = self.pick_tube_for_message(message)
+        if tube is None:
+            self.message_finished(message)
+            return
+        log.debug("Passing message through tube %s", tube.name)
+        if tube.is_async:
+            log.debug("Tube is async")
+            tube.process(message)
+        else:
+            log.debug("Tube is sync")
+            result = tube.process(message)
+            result['sender'] = tube.name
+            self.output_received(json.dumps(result))
+        
+    def pick_tube_for_message(self, message):
+        log.debug("Picking a tube for %s", message)
+        candidates = list(set(self.tubes.keys()).difference(set(message['through_tubes'])))
+        if not candidates:
+            return None
+        next_tube = self.tubes[random.choice(candidates)]
+        return next_tube
+
+    def message_finished(self, message):
+        log.debug("Message has passed through all tubes!")
+        Pusher(**settings.PUSHER_CONFIG)['messages'].trigger("finished", message)
+        log.debug(message)
 
 
 
