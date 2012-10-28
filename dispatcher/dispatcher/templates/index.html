@@ -14,7 +14,7 @@
             tr.append($("<td></td>").text(message.target || message.sender))
             tr.append($("<td></td>").text(message.payload))
             
-            $("#messages").append(tr)
+            $("#messages tr.header").after(tr)
         }
         
         $(function() {
@@ -55,7 +55,7 @@
     <p>Type some shit: <input type=text id=payload /><button disabled id=send>Do some shit</button></p>
     <p>Here&apos;s some other shit:</p>
     <table id=messages>
-        <tr>
+        <tr class=header>
             <th>ID</th>
             <th>Event</th>
             <th>Current Encoding Scheme</th>

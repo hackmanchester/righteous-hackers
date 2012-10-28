@@ -12,13 +12,26 @@ logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(name)s %(levelnam
 
 log = logging.getLogger(__name__)
 
+COLOUR_RED = (3, 0)
+COLOUR_GREEN = (0, 3)
+COLOUR_ORANGE = (3, 3)
+COLOUR_OFF = (0, 0)
+
+KEY_LENGTH = 16
+
 
 class LaunchpadTube(BaseTube):
     launchpad = None
+    key_grid = None
+    user_key_grid = None
+    lit_pads = None
+    message = None
+    ciphertext = None
     sleep_length = 0.05
     
     def __init__(self, *args, **kwargs):
         super(LaunchpadTube, self).__init__(*args, **kwargs)
+        self.reset_key()
         self.setupLaunchPad()
     
     def setupLaunchPad(self):
@@ -53,44 +66,103 @@ class LaunchpadTube(BaseTube):
         
         
     def handle(self, message):
+        self.flashLights()
+        self.message = message
+        self.reset_key()
         payload = message['payload']
-        chars = md5(payload).hexdigest()[:16]
-        self.processing(message, "MD5[:16]", chars)
+        chars = md5(payload).hexdigest()[:KEY_LENGTH]
+        self.processing(message, "MD5[:%s]" % KEY_LENGTH, chars)
         
         key = self.get_hex_digits(chars)
         key_grid = self.display_key(key)
         self.processing(message, "Key", str(key))
+        self.ciphertext = self.get_ciphertext(key, payload)
+        self.processing(message, "ciphertext", str(self.ciphertext))
         log.debug(key_grid)
-        self.return_message(message)
+        # self.return_message(message)
+    
+    def get_ciphertext(self, key, plaintext):
+        ciphertext = []
+        for i, el in enumerate(plaintext):
+            if isinstance(el, basestring):
+                c = ord(el)
+            else:
+                c = el
+            ciphertext.append(c ^ key[i%KEY_LENGTH])
+        return ciphertext
+    
+    def reset_key(self):
+        self.lit_pads = []
+        self.key_grid = defaultdict(lambda: defaultdict(bool))
+        self.user_key_grid = defaultdict(lambda: defaultdict(bool))
+        self.ciphertext = None
+        
     
     def display_key(self, key):
-        key_grid = defaultdict(lambda: defaultdict(bool))
         for i, c in enumerate(key):
             x = (i%4)*2
             y = (i/4)*2
-            self.display_key_digit(key_grid, x, y, c)
-        return key_grid
+            self.display_key_digit(x, y, c)
     
-    def display_key_digit(self, key_grid, x, y, c):
-        on_colour = (0, 3)
-        off_colour = (0, 0)
+    def display_key_digit(self, x, y, c):
+        on_colour = COLOUR_ORANGE
+        off_colour = COLOUR_OFF
         for i in range(4):
             if i == 0:
+                xx = x
+                yy = y
                 lit = bool(c & 1)
-                self.launchpad.light(x, y, *(on_colour if lit else off_colour))
-                key_grid[x][y] = lit
             if i == 1:
                 lit = bool(c & 2)
-                self.launchpad.light(x+1, y, *(on_colour if lit else off_colour))
-                key_grid[x+1][y] = lit
+                xx = x+1
+                yy = y
             if i == 2:
+                xx = x
+                yy = y+1
                 lit = bool(c & 4)
-                self.launchpad.light(x, y+1, *(on_colour if lit else off_colour))
-                key_grid[x][y+1] = lit
             if i == 3:
+                xx = x+1
+                yy = y+1
                 lit = bool(c & 8)
-                self.launchpad.light(x+1, y+1, *(on_colour if lit else off_colour))
-                key_grid[x+1][y+1] = lit
+            self.launchpad.light(xx, yy, *(on_colour if lit else off_colour))
+            self.key_grid[xx][yy] = lit
+            if lit:
+                self.lit_pads.append((xx, yy))
+    
+    def derive_key(self):
+        digits = []
+        for i in range(KEY_LENGTH):
+            x = (i%4)*2
+            y = (i/4)*2
+            digits.append(self.derive_key_digit(x, y))
+        return digits
+    
+    
+    def derive_key_digit(self, x, y):
+        digit = 0
+        for i in range(4):
+            if i == 0:
+                xx = x
+                yy = y
+                if self.user_key_grid[xx][yy]:
+                    digit |= 1
+            if i == 1:
+                xx = x+1
+                yy = y
+                if self.user_key_grid[xx][yy]:
+                    digit |= 2
+            if i == 2:
+                xx = x
+                yy = y+1
+                if self.user_key_grid[xx][yy]:
+                    digit |= 4
+            if i == 3:
+                xx = x+1
+                yy = y+1
+                if self.user_key_grid[xx][yy]:
+                    digit |= 8
+        return digit
+            
                 
     
     def get_hex_digits(self, chars):
@@ -99,6 +171,24 @@ class LaunchpadTube(BaseTube):
             vals.append(int("0x%s" % c, 16))
         return vals
     
+    def pushed_pad(self, x, y):
+        self.user_key_grid[x][y] = True
+        if (x, y) in self.lit_pads:
+            self.launchpad.light(x, y, *COLOUR_GREEN)
+        else:
+            self.launchpad.light(x, y, *COLOUR_RED)
+    
+    def finished_key_entry(self):
+        if not self.message:
+            return
+        user_key = self.derive_key()
+        self.processing(self.message, "User key", str(user_key))
+        plaintext = "".join([chr(c) for c in self.get_ciphertext(user_key, self.ciphertext)])
+        self.message['payload'] = plaintext
+        self.return_message(self.message)
+        self.flashLights()
+        self.message = None
+    
     def tick(self):
         while True:
             event = self.launchpad.poll()
@@ -106,7 +196,15 @@ class LaunchpadTube(BaseTube):
                 break
             log.debug("Event: %s", event)
             x, y, pushed = event
-            self.launchpad.light(x, y, 3 if pushed else 0, 0)
+            if pushed and x == 8 and y == 0:
+                self.finished_key_entry()
+                continue
+            if x > 7 or y > 7:
+                continue
+            if pushed:
+                self.pushed_pad(x, y)
+                
+            
 
 
 def main():
