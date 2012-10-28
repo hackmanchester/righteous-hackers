@@ -6,6 +6,8 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     url(r'^$', 'dispatcher.views.index'),
+    url(r'^pusher/auth$', 'dispatcher.views.pusher_auth'),
+    
     # Examples:
     # url(r'^$', 'dispatcher.views.home', name='home'),
     # url(r'^dispatcher/', include('dispatcher.foo.urls')),

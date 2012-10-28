@@ -2,12 +2,13 @@ import glob
 import yaml
 import os
 import json
+import hmac
 from subprocess import Popen, PIPE
 from logging import getLogger
 from pusher import Pusher
 import pusherclient
 import time
-from hashlib import md5
+from hashlib import md5, sha256
 import random
 
 from django.conf import settings
@@ -15,6 +16,9 @@ from django.conf import settings
 log = getLogger(__name__)
 
 INCLUDE_UNSTABLE = False
+
+CHANNEL_NAME = "messages"
+PRIVATE_CHANNEL_NAME = "private-messages"
 
 def list_tubes():
     tubes = []
@@ -93,12 +97,13 @@ class TubeWrapper(object):
     def invoke_pusher(self, message):
         log.debug("Should use pusher to send a message to %s", self.name)
         message['target'] = self.name
-        self.pusher['messages'].trigger("input", message)
+        self.pusher[CHANNEL_NAME].trigger("input", message)
         
 
 
 
 class TubeDispatcher(object):
+    pusherclient = None
     pusher = None
     tubes = None
     
@@ -106,6 +111,9 @@ class TubeDispatcher(object):
         self.tubes = {name: TubeWrapper(name) for name in list_tubes()}
     
     def run(self):
+        if not self.pusherclient:
+            self.connectclient()
+        
         if not self.pusher:
             self.connect()
         
@@ -113,20 +121,31 @@ class TubeDispatcher(object):
             time.sleep(1)
     
     
+    def connectclient(self):
+        if self.pusherclient:
+            return
+        
+        def connection_handler(data):
+            channel = self.pusherclient.subscribe(CHANNEL_NAME)
+            channel.bind("input", self.input_received)
+            channel.bind("output", self.output_received)
+            
+            private_channel = self.pusherclient.subscribe(PRIVATE_CHANNEL_NAME)
+            private_channel.bind("client-input", self.private_input_received)
+        
+        self.pusherclient = pusherclient.Pusher(settings.PUSHER_CONFIG['key'], secret=settings.PUSHER_CONFIG['secret'])
+        self.pusherclient.connection.bind('pusher:connection_established', connection_handler)
+    
     def connect(self):
         if self.pusher:
             return
         
-        connection = None
+        self.pusher = Pusher(**settings.PUSHER_CONFIG)
         
-        def connection_handler(data):
-            channel = connection.subscribe("messages")
-            channel.bind("input", self.input_received)
-            channel.bind("output", self.output_received)
-        
-        connection = pusherclient.Pusher(settings.PUSHER_CONFIG['key'])
-        connection.connection.bind('pusher:connection_established', connection_handler)
-        
+    
+    def private_input_received(self, data):
+        message = json.loads(data)
+        self.pusher['messages'].trigger("input", message)
     
     def input_received(self, data):
         message = json.loads(data)
@@ -164,7 +183,8 @@ class TubeDispatcher(object):
             log.debug("Tube is sync")
             result = tube.process(message)
             result['sender'] = tube.name
-            self.output_received(json.dumps(result))
+            self.pusher[CHANNEL_NAME].trigger("output", result)
+            # self.output_received(json.dumps(result))
         
     def pick_tube_for_message(self, message):
         log.debug("Picking a tube for %s", message)
@@ -176,7 +196,7 @@ class TubeDispatcher(object):
 
     def message_finished(self, message):
         log.debug("Message has passed through all tubes!")
-        Pusher(**settings.PUSHER_CONFIG)['messages'].trigger("finished", message)
+        self.pusher[CHANNEL_NAME].trigger("finished", message)
         log.debug(message)
 
 

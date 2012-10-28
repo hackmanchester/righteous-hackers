@@ -20,4 +20,4 @@ class Command(BaseCommand):
         
         pusher = Pusher(**settings.PUSHER_CONFIG)
         
-        pusher['messages'].trigger('input', message)
+        pusher['private-messages'].trigger('client-input', message)

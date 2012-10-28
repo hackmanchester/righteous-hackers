@@ -1,5 +1,61 @@
 {% extends "base.html" %}
 
+{% block head_extra %}
+    <script type="text/javascript" src="{{ STATIC_URL}}script/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" async src="http://js.pusher.com/1.12/pusher.min.js" id="pusherjs"></script>
+        
+    <script type="text/javascript">
+        function displayMessage(message, event) {
+            var tr = $("<tr></tr>").addClass(event)
+            tr.append($("<td></td>").text(message.id))
+            tr.append($("<td></td>").text(event))
+            tr.append($("<td></td>").text(message.encoding_scheme))
+            tr.append($("<td></td>").text(message.encoded_payload))
+            tr.append($("<td></td>").text(message.target || message.sender))
+            tr.append($("<td></td>").text(message.payload))
+            
+            $("#messages").append(tr)
+        }
+        
+        $(function() {
+            $("#pusherjs").bind("load", function() {
+                var pusher = new Pusher("afefd11a8f69dd2a425d")
+                var channel = pusher.subscribe("messages")
+                var private_channel = pusher.subscribe("private-messages")
+                
+                channel.bind("input", function(data) {
+                    displayMessage(data, "input")
+                })
+                channel.bind("output", function(data) {
+                    displayMessage(data, "output")
+                })
+                channel.bind("processing", function(data) {
+                    displayMessage(data, "processing")
+                })
+                channel.bind("finished", function(data) {
+                    displayMessage(data, "finished")
+                })
+                
+                $("#send").click(function() {
+                    private_channel.trigger("client-input", {target: "dispatcher", payload: $("#payload").val()})
+                })
+            })
+        })
+    </script>
+{% endblock  %}
+
 {% block content %}
     <h1>Blah Foo Bar</h1>
+    <p>Type some shit: <input type=text id=payload /><button id=send>Do some shit</button></p>
+    <p>Here&apos;s some other shit:</p>
+    <table id=messages>
+        <tr>
+            <th>ID</th>
+            <th>Event</th>
+            <th>Current Encoding Scheme</th>
+            <th>Encoded Payload</th>
+            <th>Target/Sender</th>
+            <th>Payload</th>
+        </tr>
+    </table>
 {% endblock %}
