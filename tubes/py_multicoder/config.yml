@@ -1,0 +1,5 @@
+name: py_multicoder
+invocation_method: pusher
+result_method: pusher
+description: Encodes a range of strings using an RPi and Python
+status: stable
