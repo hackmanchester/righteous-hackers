@@ -4,6 +4,8 @@ import serial
 import sys
 import json
 
+from basetube import BaseTube
+
 SERIALPORT = '/dev/tty.usbserial-A8004Iy6'
 ser = serial.Serial(port=SERIALPORT, timeout=10, baudrate = 9600)
 ser.flushInput()
@@ -12,37 +14,40 @@ ser.flushOutput()
 msg = ""
 fails = 0
 
+
+class ArduinoLoop(BaseTube):
+    def handle(self, message):
+        payload = message['payload']
+        
+        myMsg = payload.encode('rot13')
+        self.processing(message, "ROT13", myMsg)
+        
+        returned = self.sendAndCheck(myMsg)
+        
+        message['payload'] = returned.encode('rot13')
+        jsonObj['payload'] += " USB, RS232, Arduino, I2C, SPI, ASCII, ROT13"
+        self.return_message(message)
+
+    def sendAndCheck(self, text):
+        ser.flushInput()
+        ser.flushOutput()
+        ser.write(text+"\n")
+        
+        inString = ser.readline()
+        if text == inString:
+            return inString
+        else:
+            self.sendAndCheck(text)
+    
+
 def main():
-    global msg
-    msg = sys.stdin.readline()
-    sendString(msg)
-    
-def sendString(myMsg):
-    jsonObj = json.loads(myMsg)
-    jsonObj['payload'] = jsonObj['payload'].encode('rot13')
-    ser.flushInput()
-    ser.flushOutput()
-    ser.write(json.dumps(jsonObj)+"\n")
-    waitForResponce()
-
-def waitForResponce():
-    global fails
-    inString = ser.readline()
-    print inString
-    
-    try:
-      jsonObj = json.loads(inString)
-      jsonObj['payload'] = jsonObj['payload'].encode('rot13')
-      jsonObj['payload'] += " USB, RS232, Arduino, I2C, SPI, ASCII, ROT13"
-      sys.stdout.write(json.dumps(jsonObj) + "/n")
-      print fails
-    except ValueError as ex:
-      print ex
-      fails = fails + 1
-      sendString(msg)
-
-    
+    MulticoderTube("py_multicoder").run()
 
 if __name__ == '__main__':
     main()
     
+
+self.processing(message, "Hex", newPayload)
+        
+        message['payload'] = newPayload
+        self.return_message(message)
