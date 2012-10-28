@@ -9,7 +9,7 @@ require 'yaml'
 # puts "#{JSON.generate data}"
 
 tube_config = YAML.load_file('config.yml')
-append_text = tube_config["description"]
+append_text = "\nEncoded: JSON, Language: Ruby, Transport: Stdin / Pusher."
 json_input = JSON.parse STDIN.read
 
 Pusher.app_id = '30507'

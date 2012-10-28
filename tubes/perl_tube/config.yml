@@ -1,4 +1,5 @@
 name:               perl_tube
+display_name: 		Perl Tube
 status:             stable
 invocation_method:  stdin
 result_method:      stdout

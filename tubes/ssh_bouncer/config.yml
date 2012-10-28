@@ -1,4 +1,5 @@
 name: ssh_bouncer
+display_name: SSH Bouncer
 invocation_method: stdin
 result_method: stdout
 status: stable

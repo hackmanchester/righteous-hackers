@@ -1,4 +1,5 @@
 name: ruby_basic
+display_name: Basic Ruby Tube
 description: >
     a ruby script that doesn't transform the message.
 invocation_method: stdin

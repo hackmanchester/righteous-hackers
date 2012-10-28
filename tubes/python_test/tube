@@ -16,12 +16,10 @@ def main():
     message['sender'] = "python_test"
     p['messages'].trigger("processing", message)
     
-    
-    
-    
     del(message['sender'])
     del(message['encoding_scheme'])
     del(message['encoded_payload'])
+    message['payload'] += "\nEncoded: Base64, Language: Python, Transport: Stdin / Pusher."
     sys.stdout.write(json.dumps(message))
 
 if __name__ == '__main__':

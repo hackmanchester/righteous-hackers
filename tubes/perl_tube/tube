@@ -8,7 +8,7 @@ $in = <>;
 $json = new JSON;
 $json_text = $json->allow_nonref->utf8->relaxed->decode($in);
 $payload = $json_text->{payload};
-$addition = '$Processed->$by->$Perl.';
+$addition = '\nEncoded: UTF8, Language: Perl, Transport: Stdin / Stdout.")';
 $new_payload = $payload . $addition;
 
 my $data;
