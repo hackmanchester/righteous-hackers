@@ -29,6 +29,9 @@ class LaunchpadTube(BaseTube):
     ciphertext = None
     sleep_length = 0.05
     
+    countdown_length = 10
+    countdown_timer = 0
+    
     protocols = "MIDI, USB"
     languages = "Python"
     transports = "Human data-entry"
@@ -110,6 +113,21 @@ class LaunchpadTube(BaseTube):
             y = (i/4)*2
             self.display_key_digit(x, y, c)
         self.launchpad.light(8, 0, 3, 0)
+        # self.start_countdown()
+    
+    def start_countdown(self):
+        self.countdown_timer = int(self.countdown_length/self.sleep_length)
+        
+    def display_countdown(self):
+        if self.countdown_timer <= 0:
+            self.countdown_timer = 0
+            return
+            
+        segments = (self.countdown_timer / (self.countdown_timer/self.sleep_length)) * 8
+        log.debug(segments)
+        for y in range(int(segments)):
+            self.launchpad.light(8, y, *COLOUR_RED)
+        self.countdown_timer -= 1
     
     def display_key_digit(self, x, y, c):
         on_colour = COLOUR_ORANGE
@@ -213,6 +231,8 @@ class LaunchpadTube(BaseTube):
                 continue
             if pushed:
                 self.pushed_pad(x, y)
+        # if self.countdown_timer:
+        #     self.display_countdown()
                 
             
 

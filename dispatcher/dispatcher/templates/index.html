@@ -60,6 +60,11 @@
                     }
                     private_channel.trigger("client-input", {target: "dispatcher", payload: $("#payload").val()})
                     clicked = true
+                    displayMessage({
+                        id: "",
+                        payload: $("#payload").val(),
+                        target: "dispatcher"
+                    }, "input")
                 }).removeAttr("disabled")
                 
                 $("#payload").keydown(debounce(function(event) {
