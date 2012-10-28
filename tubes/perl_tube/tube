@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+
+use JSON;
+
+$in = <>;
+#print $in;
+
+$json = new JSON;
+$json_text = $json->allow_nonref->utf8->relaxed->decode($in);
+$payload = $json_text->{payload};
+$addition = ', I added perl';
+$new_payload = $payload . $addition;
+
+#print $new_payload . '/n';
+
+my $data;
+$data->{id}  = $json_text->{id};
+$data->{payload} = $new_payload;
+
+
+print $json->encode($data);

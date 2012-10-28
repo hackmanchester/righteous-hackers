@@ -1,0 +1,6 @@
+name:               perl_tube
+status:             unstable
+invocation_method:  stdin
+result_method:      stdout
+description: >
+    Basic Perl echo tube

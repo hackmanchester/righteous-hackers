@@ -1,0 +1,13 @@
+#!/usr/bin/env escript
+
+main(_) ->
+    {ok, [X]} = io:fread("", "~d"),
+    %% Write X hellos
+    hello(X).
+
+%% Do nothing when there is no hello to write
+hello(N) when N =< 0 -> ok;
+%% Else, write a 'Hello World!', and then write (n-1) hellos
+hello(N) ->
+   io:fwrite("Hello World!~n"),
+   hello(N - 1).
