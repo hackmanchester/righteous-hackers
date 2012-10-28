@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 from pyLaunchpad import launchpad
 import logging
+from hashlib import md5
+import random
+import time
 
 from basetube import BaseTube
 
@@ -18,21 +21,57 @@ class LaunchpadTube(BaseTube):
         self.setupLaunchPad()
     
     def setupLaunchPad(self):
-        launchPads = launchpad.findLaunchpads()
-        l = launchpad.launchpad(*launchPads[-1])
+        launchpads = launchpad.findLaunchpads()
+        log.debug("Found launchpads: %s", launchpads)
+        l = launchpad.launchpad(*launchpads[-1])
         
         l.reset()
         l.setDrumRackMode()
         self.launchpad = l
+        self.flashLights()
+    
+    def flashLights(self):
+        for x in range(9):
+            for y in range(9):
+                self.launchpad.light(x, y, min(x/2, 3), min(y/2, 3))
+        time.sleep(0.3)
+        for x in range(9):
+            for y in range(9):
+                self.launchpad.light(x, y, min(y/2, 3), min(x/2, 3))
+        time.sleep(0.3)
+
+        for x in range(9):
+            for y in range(9):
+                self.launchpad.light(x, y, 3-min(x/2, 3), 3-min(y/2, 3))
+        time.sleep(0.3)
+        for x in range(9):
+            for y in range(9):
+                self.launchpad.light(x, y, 3-min(y/2, 3), 3-min(x/2, 3))
+        time.sleep(0.3)
+        self.launchpad.lightAllTest(0, 0)
+        
         
     def handle(self, message):
         payload = message['payload']
-        log.debug("payload")
-        self.processing(message, "lolcats", "LOLOLOLOLOLOLOL")
+        bits = md5(payload).hexdigest()[:8]
+        self.processing(message, "MD5[:8]", bits)
+        
+        for x in range(8):
+            for y in range(8):
+                if random.choice([True, False]):
+                    self.launchpad.light(x, y, 3, 0)
+                else:
+                    self.launchpad.light(x, y, 0, 0)
         self.return_message(message)
     
     def tick(self):
-        self.launchpad.poll()
+        while True:
+            event = self.launchpad.poll()
+            if not event:
+                break
+            log.debug("Event: %s", event)
+            x, y, pushed = event
+            self.launchpad.light(x, y, 3 if pushed else 0, 0)
 
 
 def main():
