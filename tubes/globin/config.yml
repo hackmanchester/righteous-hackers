@@ -2,4 +2,5 @@ name:               globin
 status:             unstable
 invocation_method:  stdin
 result_method:      stdout
-description:        globins!
+description: >
+    Basic Python tube that ROT13 encodes the input payload
