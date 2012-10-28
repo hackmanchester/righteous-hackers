@@ -18,31 +18,29 @@ class MulticoderTube(BaseTube):
         
         message['payload'] = newPayload.encode('unicode_escape')
         self.return_message(message)
-
+    
+    def hexEncode(self, msg, message):
+        self.processing(message, "Hex", msg.encode('hex'))
+        return bz2Encode(msg, message)+'Hex encoded.'
+    
+    def bz2Encode(self, msg, message):
+        self.processing(message, "BZ2", msg.encode('bz2_codec'))
+        return uuEncode(msg, message)+'BZ2 encoded.'
+    
+    def uuEncode(self, msg, message):
+        self.processing(message, "UU", msg.encode('uu_codec'))
+        return gzipEncode(msg, message)+'UU encoded.'
+    
+    def gzipEncode(self, msg, message):
+      self.processing(message, "Zip", msg.encode('zlib_codec'))
+      return punyEncode(msg, message)+'Zip encoded.'
+    
+    def punyEncode(self, msg, message):
+      elf.processing(message, "Punycode", msg.encode('punycode'))
+      return msg+'Punycoded.'
 
 def main():
     MulticoderTube("py_multicoder").run()
-
-def hexEncode(msg, message):
-    self.processing(message, "Hex", msg.encode('hex'))
-    return bz2Encode(msg, message)+'Hex encoded.'
-
-def bz2Encode(msg, message):
-    self.processing(message, "BZ2", msg.encode('bz2_codec'))
-    return uuEncode(msg, message)+'BZ2 encoded.'
-
-def uuEncode(msg, message):
-    self.processing(message, "UU", msg.encode('uu_codec'))
-    return gzipEncode(msg, message)+'UU encoded.'
-
-def gzipEncode(msg, message):
-    self.processing(message, "Zip", msg.encode('zlib_codec'))
-    return punyEncode(msg, message)+'Zip encoded.'
-
-def punyEncode(msg, message):
-    self.processing(message, "Punycode", msg.encode('punycode'))
-    return msg+'Punycoded.'
-
 
 if __name__ == '__main__':
     main()
