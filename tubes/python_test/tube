@@ -13,12 +13,13 @@ def main():
     
     message['encoding_scheme'] = "base64"
     message['encoded_payload'] = message['payload'].encode("base64")
-    
+    message['sender'] = "python_test"
     p['messages'].trigger("processing", message)
     
     
     
     
+    del(message['sender'])
     del(message['encoding_scheme'])
     del(message['encoded_payload'])
     sys.stdout.write(json.dumps(message))

@@ -4,6 +4,7 @@ import logging
 from hashlib import md5
 import random
 import time
+from collections import defaultdict
 
 from basetube import BaseTube
 
@@ -53,16 +54,50 @@ class LaunchpadTube(BaseTube):
         
     def handle(self, message):
         payload = message['payload']
-        bits = md5(payload).hexdigest()[:8]
-        self.processing(message, "MD5[:8]", bits)
+        chars = md5(payload).hexdigest()[:16]
+        self.processing(message, "MD5[:16]", chars)
         
-        for x in range(8):
-            for y in range(8):
-                if random.choice([True, False]):
-                    self.launchpad.light(x, y, 3, 0)
-                else:
-                    self.launchpad.light(x, y, 0, 0)
+        key = self.get_hex_digits(chars)
+        key_grid = self.display_key(key)
+        self.processing(message, "Key", str(key))
+        log.debug(key_grid)
         self.return_message(message)
+    
+    def display_key(self, key):
+        key_grid = defaultdict(lambda: defaultdict(bool))
+        for i, c in enumerate(key):
+            x = (i%4)*2
+            y = (i/4)*2
+            self.display_key_digit(key_grid, x, y, c)
+        return key_grid
+    
+    def display_key_digit(self, key_grid, x, y, c):
+        on_colour = (0, 3)
+        off_colour = (0, 0)
+        for i in range(4):
+            if i == 0:
+                lit = bool(c & 1)
+                self.launchpad.light(x, y, *(on_colour if lit else off_colour))
+                key_grid[x][y] = lit
+            if i == 1:
+                lit = bool(c & 2)
+                self.launchpad.light(x+1, y, *(on_colour if lit else off_colour))
+                key_grid[x+1][y] = lit
+            if i == 2:
+                lit = bool(c & 4)
+                self.launchpad.light(x, y+1, *(on_colour if lit else off_colour))
+                key_grid[x][y+1] = lit
+            if i == 3:
+                lit = bool(c & 8)
+                self.launchpad.light(x+1, y+1, *(on_colour if lit else off_colour))
+                key_grid[x+1][y+1] = lit
+                
+    
+    def get_hex_digits(self, chars):
+        vals = []
+        for c in chars:
+            vals.append(int("0x%s" % c, 16))
+        return vals
     
     def tick(self):
         while True:
