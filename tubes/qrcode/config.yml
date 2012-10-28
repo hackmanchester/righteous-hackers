@@ -4,4 +4,4 @@ description: >
     Encodes the message into a QR code, prints it out over Bluetooth, then scans it back in through an iPhone
 invocation_method: pusher 
 result_method: pusher
-status: unstable
+status: stable

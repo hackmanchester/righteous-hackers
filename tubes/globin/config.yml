@@ -1,6 +1,6 @@
 name:               globin
-display_name:		ROT 13 Encoder
-status:             unstable
+display_name:       ROT 13 Encoder
+status:             stable
 invocation_method:  stdin
 result_method:      stdout
 description: >

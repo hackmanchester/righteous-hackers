@@ -5,21 +5,37 @@
     <script type="text/javascript" async src="http://js.pusher.com/1.12/pusher.min.js" id="pusherjs"></script>
         
     <script type="text/javascript">
+        function debounce(func, wait) {
+          var timeout;
+          return function() {
+            var context = this, args = arguments;
+            var throttler = function() {
+              timeout = null;
+              func.apply(context, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(throttler, wait);
+          };
+        };
+
         function displayMessage(message, event) {
             var tr = $("<tr></tr>").addClass(event)
             tr.append($("<td></td>").text(message.id))
             tr.append($("<td></td>").text(event))
             tr.append($("<td></td>").text(message.encoding_scheme))
-            tr.append($("<td></td>").text(message.encoded_payload))
+            tr.append($("<td class=encodedpayload></td>").text(message.encoded_payload))
             tr.append($("<td></td>").text(message.target || message.sender))
-            var code = $("<code></code>").text(message.payload)
-            var td = $("<td></td>").append(code)
+            var code = $("<pre></pre>").text(message.payload)
+            var td = $("<td class=payload></td>").append(code)
             tr.append(td)
-            
+            if (event == "output") {
+                $("#latestupdate").text(message.payload)
+            }
             $("#messages tr.header").after(tr)
         }
         
         $(function() {
+            var clicked = false
             $("#pusherjs").bind("load", function() {
                 var pusher = new Pusher("afefd11a8f69dd2a425d")
                 var channel = pusher.subscribe("messages")
@@ -39,23 +55,31 @@
                 })
                 
                 $("#send").click(function() {
+                    if (clicked) {
+                        return
+                    }
                     private_channel.trigger("client-input", {target: "dispatcher", payload: $("#payload").val()})
+                    clicked = true
                 }).removeAttr("disabled")
                 
-                $("#payload").keydown(function(event) {
+                $("#payload").keydown(debounce(function(event) {
                     if (event.keyCode == 10 || event.keyCode == 13) {
                         $("#send").click()
                     }
-                })
+                }, 125))
             })
         })
     </script>
 {% endblock  %}
 
 {% block content %}
-    <h1>Blah Foo Bar</h1>
-    <p>Type some shit: <input type=text id=payload /><button disabled id=send>Do some shit</button></p>
-    <p>Here&apos;s some other shit:</p>
+    <h1>A Series of Tubes</h1>
+    <p id=intro>
+        Type some stuff: <input type=text id=payload /> <button disabled id=send>Away we go!</button>
+        <br />
+        Latest update: <pre id=latestupdate></pre>
+    </p>
+    <p>Here&apos;s some other stuff:</p>
     <table id=messages>
         <tr class=header>
             <th>ID</th>

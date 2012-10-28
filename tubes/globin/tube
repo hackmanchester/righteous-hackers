@@ -7,7 +7,7 @@ def main():
     msg = sys.stdin.readline()
     jsonObj = json.loads(msg)
     jsonObj['payload'] = jsonObj['payload'].encode('rot13')
-    sys.stdout.write(json.dumps(jsonObj)+"\nEncoded: ROT13, Language: Python, Transport: Stdin / Stdout.")
+    sys.stdout.write(json.dumps(jsonObj)+"\nEncoded: ROT13\nLanguage: Python\nTransport: Stdin / Stdout.")
 
 if __name__ == '__main__':
     main()

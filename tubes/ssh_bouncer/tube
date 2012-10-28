@@ -1,3 +1,16 @@
 #!/bin/bash
 
-cat | ssh office cat
+cat | ssh office cat > /tmp/ssh_bouncer.json
+
+python <<EOF
+import json
+
+message = json.loads(open("/tmp/ssh_bouncer.json", "rb").read())
+
+message['payload'] += "\nLanguage: Bash, Python\nProtocol: SSH\n"
+
+open("/tmp/ssh_bouncer.json", "wb").write(json.dumps(message))
+
+EOF
+
+cat /tmp/ssh_bouncer.json && rm /tmp/ssh_bouncer.json

@@ -108,6 +108,7 @@ class LaunchpadTube(BaseTube):
             x = (i%4)*2
             y = (i/4)*2
             self.display_key_digit(x, y, c)
+        self.launchpad.light(8, 0, 3, 0)
     
     def display_key_digit(self, x, y, c):
         on_colour = COLOUR_ORANGE

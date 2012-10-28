@@ -18,3 +18,41 @@ html {
     background-color: #9ED58C;
 }
 
+body, html {
+    padding: 0;
+    margin: 0;
+}
+
+#wrapper {
+    width: 1450px;
+    margin: 0 auto;
+    max-width: 1450px;
+}
+
+#wrapper table {
+    width: 100%;
+    
+}
+
+#wrapper table td.encodedpayload {
+    overflow: hidden;
+    max-width: 300px;
+}
+
+#wrapper table td.payload {
+/*    overflow*/
+}
+
+#intro {
+    font-size: 1.5em;
+}
+#intro input, #intro button {
+    font-size: 1em;
+}
+
+#latestupdate {
+    border: solid 1px silver;
+    height: 150px;
+    width: 600px;
+    overflow: auto;
+}
