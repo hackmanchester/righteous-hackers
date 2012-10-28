@@ -154,7 +154,10 @@ class TubeDispatcher(object):
     def output_received(self, data):
         message = json.loads(data)
         message['through_tubes'].append(message['sender'])
-        del(message['sender'])
+        if 'sender' in message:
+            del(message['sender'])
+        if 'target' in message:
+            del(message['target'])
         self.process_message(message)
         
     
