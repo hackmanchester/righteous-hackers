@@ -7,15 +7,22 @@
 //
 
 #import "RHViewController.h"
-#import "RHPusherManager.h"
 #import "RHPipeCell.h"
 #import "Message.h"
+#import "PTPusherAPI.h"
+#import "RHComposeViewController.h"
+#import "RHPacketCell.h"
 
+#define UIColorFromRGB(rgbValue) [UIColor \
+colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
+blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 @interface RHViewController ()
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
-@property (nonatomic, strong) NSSet *messageIds;
+@property (nonatomic, strong) NSMutableArray *messageIds;
+@property (nonatomic, strong) NSMutableDictionary *messageDict;
 @end
 
 @implementation RHViewController
@@ -25,16 +32,20 @@
     if (self = [super initWithNibName:nil bundle:nil])
     {
         self.navigationItem.title = @"Tubes";
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(compose:)];
         
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:NSManagedObjectContextDidSaveNotification object:nil];
         
-        self.fetchedResultsController = [[RHPusherManager sharedInstance] fetchedResultsControllerForMessageIds];
-        self.fetchedResultsController.delegate = self;
+//        self.fetchedResultsController = [[RHPusherManager sharedInstance] fetchedResultsControllerForMessageIds];
+//        self.fetchedResultsController.delegate = self;
+//        
+//        NSError *error;
+//        BOOL success = [self.fetchedResultsController performFetch:&error];
         
-        NSError *error;
-        BOOL success = [self.fetchedResultsController performFetch:&error];
+        [[RHPusherManager sharedInstance] setDelegate:self];
         
-        self.messageIds = @[];
+        self.messageDict = [@{} mutableCopy];
+        self.messageIds = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -50,7 +61,9 @@
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    [self.tableView registerClass:[RHPipeCell class] forCellReuseIdentifier:@"PipeCell"];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.tableView registerClass:[RHPacketCell class] forCellReuseIdentifier:@"PipeCell"];
     
     [self.view addSubview:self.tableView];
 }
@@ -63,9 +76,63 @@
 
 - (void)modelChanged:(NSNotification *)notification
 {
-    self.messageIds = [[RHPusherManager sharedInstance] listOfMessageIds];
+  //  self.messageIds = [[RHPusherManager sharedInstance] listOfMessageIds];
 
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
+}
+
+- (void)compose:(id)sender
+{
+    RHComposeViewController *viewController = [[RHComposeViewController alloc] init];
+    viewController.delegate = self;
+    
+    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:viewController];
+    
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        nvc.modalPresentationStyle = UIModalPresentationFormSheet;
+    }
+    
+    nvc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    
+    [self presentViewController:nvc animated:YES completion:nil];
+}
+
+- (void)composeViewControllerWasCancelled:(RHComposeViewController *)viewController
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)composeViewController:(RHComposeViewController *)viewController didSendMessage:(NSString *)message
+{
+    [[RHPusherManager sharedInstance] sendMessage:message];
+
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)pusherManagerDidReceiveMessage:(Message *)message
+{
+    if ([self.messageIds containsObject:message.messageId])
+    {
+        [self.messageDict[message.messageId] insertObject:message atIndex:0];
+        
+        NSInteger idx = [self.messageIds indexOfObject:message.messageId];
+//        RHPipeCell *cell = (RHPipeCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:idx]];
+//        [cell addMessage:message];
+        
+        [self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForItem:0 inSection:idx] ] withRowAnimation:UITableViewRowAnimationLeft];
+    }
+    else
+    {
+        [self.messageDict setObject:[@[ message ] mutableCopy] forKey:message.messageId];
+        [self.messageIds addObject:message.messageId];
+        
+        [self.tableView insertSections:[NSIndexSet indexSetWithIndex:[self.messageIds count] - 1]
+                      withRowAnimation:UITableViewRowAnimationBottom];
+    }
+    
+//    NSLog(@"MessageIds: %@", self.messageIds);
+//    NSLog(@"Messages: %@", self.messageDict);
 }
 
 /*
@@ -135,7 +202,7 @@
 
 
 #pragma mark - Table View
-
+/*
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [[self.fetchedResultsController sections] count];
 }
@@ -158,23 +225,84 @@
     return [self.fetchedResultsController sectionForSectionIndexTitle:title atIndex:index];
 }
 
+*/
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return [self.messageIds count];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    NSString *messageId = self.messageIds[section];
+    
+    return [self.messageDict[messageId] count];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 170.0f;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    RHPipeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PipeCell" forIndexPath:indexPath];
+    RHPacketCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PipeCell" forIndexPath:indexPath];
     
-    Message *managedObject = (Message *)[self.fetchedResultsController objectAtIndexPath:indexPath];
+//    Message *managedObject = (Message *)[self.fetchedResultsController objectAtIndexPath:indexPath];
 
+    NSString *messageId = self.messageIds[indexPath.section];
+
+    Message *message = self.messageDict[messageId][indexPath.row];
     
-    NSLog(@"returning cell... %@", managedObject);
-    cell.numberOfPipes = 10;
+//    NSLog(@"Message: %@", message);
+    
+    if (message.target)
+        cell.label.text = message.target;
+    else if (message.sender)
+        cell.label.text = message.sender;
+//c
+//    if (!cell.messages)
+//        cell.messages = messages;
     
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    RHPacketCell *packetCell = (RHPacketCell *)cell;
+    
+    NSString *messageId = self.messageIds[indexPath.section];
+    
+    Message *message = self.messageDict[messageId][indexPath.row];
+    
+    switch (message.type) {
+        case kMessageTypeInput:
+            packetCell.label.backgroundColor = UIColorFromRGB(0xAAC9DB);
+            break;
+        case kMessageTypeOutput:
+            packetCell.label.backgroundColor = UIColorFromRGB(0xDCDEA0);
+            break;
+        case kMessageTypeProcessing:
+            packetCell.label.backgroundColor = UIColorFromRGB(0xDEB694);
+            break;
+            
+        case kMessageTypeFinished:
+            packetCell.label.backgroundColor = UIColorFromRGB(0x9ED58C);
+            break;
+        default:
+            break;
+    }
+}
+
+
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return self.messageIds[section];
 }
 
 @end

@@ -8,7 +8,9 @@
 
 #import "RHPusherManager.h"
 #import "PTPusherEvent.h"
+#import "PTPusherAPI.h"
 #import "Message.h"
+#import "Pipeline.h"
 
 @interface RHPusherManager ()
 @property (nonatomic, strong) PTPusher *pusher;
@@ -42,33 +44,79 @@
         
         [self.pusher subscribeToChannelNamed:@"messages"];
         [self.pusher bindToEventNamed:@"output" handleWithBlock:^(PTPusherEvent *event) {
-            NSLog(@"Received pusher output event: %@", event);
+//            NSLog(@"Received pusher output event: %@", event);
             
-            Message *message = [self newMessageFromEvent:event];
-            
-            NSError *error = nil;
-            [self.managedObjectContext save:&error];
+            [self handleEvent:event];
+//            NSError *error = nil;
+//            [self.managedObjectContext save:&error];
         }];
         
         [self.pusher bindToEventNamed:@"input" handleWithBlock:^(PTPusherEvent *event) {
-            
+                        [self handleEvent:event];
         }];
 
         [self.pusher bindToEventNamed:@"processing" handleWithBlock:^(PTPusherEvent *event) {
-            
+                        [self handleEvent:event];
+        }];
+        
+        
+        [self.pusher bindToEventNamed:@"finished" handleWithBlock:^(PTPusherEvent *event) {
+            [self handleEvent:event];
         }];
     }
     return self;
 }
 
+- (void)handleEvent:(PTPusherEvent *)event
+{
+    Message *message = [self newMessageFromEvent:event];
+    
+    if (message.messageId)
+    {
+    if (self.delegate)
+    {
+        if ([self.delegate respondsToSelector:@selector(pusherManagerDidReceiveMessage:)])
+            [self.delegate pusherManagerDidReceiveMessage:message];
+    }
+    }
+
+}
+
+- (void)sendMessage:(NSString *)message
+{
+    PTPusherAPI *push = [[PTPusherAPI alloc] initWithKey:PUSHER_API_KEY appID:PUSHER_APP_ID secretKey:PUSHER_API_SECRET];
+    [push triggerEvent:@"client-input" onChannel:@"private-messages" data:@{ @"payload" : message, @"target" : @"dispatcher" } socketID:nil];
+}
+
 - (Message *)newMessageFromEvent:(PTPusherEvent *)event
 {
-    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message"
-                                                     inManagedObjectContext:self.managedObjectContext];
+    //Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message"
+    //                                                 inManagedObjectContext:self.managedObjectContext];
+    
+    Message *message = [[Message alloc] init];
+    
     NSDictionary *data = (NSDictionary *)event.data;
+    
+    NSLog(@"Event name: %@", event.name);
+    
+    if ([event.name isEqualToString:@"input"])
+        message.type = kMessageTypeInput;
+    else if ([event.name isEqualToString:@"output" ])
+        message.type = kMessageTypeOutput;
+    else if ([event.name isEqualToString: @"processing"])
+        message.type = kMessageTypeProcessing;
+              else if ([event.name isEqualToString:@"finished"])
+        message.type = kMessageTypeFinished;
+    
     
     message.messageId = data[@"id"];
     message.payload = data[@"payload"];
+    
+    if ([[data allKeys] containsObject:@"target"])
+        message.target = data[@"target"];
+
+    if ([[data allKeys] containsObject:@"sender"])
+        message.sender = data[@"sender"];
     
     return message;
 }
@@ -79,7 +127,7 @@
 - (void)handlePusherEvent:(NSNotification *)note
 {
     PTPusherEvent *event = [note.userInfo objectForKey:PTPusherEventUserInfoKey];
-    NSLog(@"[pusher] Received event %@", event);
+//    NSLog(@"[pusher] Received event %@", event);
 }
 
 #pragma mark - Core Data
@@ -98,14 +146,17 @@
     }
 }
 
-- (NSArray *)listOfMessages
+- (NSArray *)listOfPipelines
 {
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSEntityDescription *entityDescription = [NSEntityDescription
-                                              entityForName:@"Message" inManagedObjectContext:moc];
+                                              entityForName:@"Pipeline" inManagedObjectContext:moc];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDescription];
-        
+    request.propertiesToFetch = @[ @"messageId" ];
+    [request setResultType:NSDictionaryResultType];
+    request.returnsDistinctResults = YES;
+    
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc]
                                         initWithKey:@"messageId" ascending:YES];
     [request setSortDescriptors:@[sortDescriptor]];

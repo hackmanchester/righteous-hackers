@@ -7,14 +7,13 @@
 //
 
 #import "Message.h"
-#import "Pipeline.h"
 
 
 @implementation Message
 
-@dynamic payload;
-@dynamic target;
-@dynamic sender;
-@dynamic pipeline;
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<Message id:%@ payload:%@ target:%@ sender:%@>", self.messageId, self.payload, self.target, self.sender];
+}
 
 @end

@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17268F90163D34510070469B /* RHComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 17268F8F163D34510070469B /* RHComposeViewController.m */; };
+		17268F94163D34AD0070469B /* cardboard_flat.png in Resources */ = {isa = PBXBuildFile; fileRef = 17268F92163D34AD0070469B /* cardboard_flat.png */; };
+		17268F95163D34AD0070469B /* cardboard_flat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 17268F93163D34AD0070469B /* cardboard_flat@2x.png */; };
+		17268F97163D34FB0070469B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17268F96163D34FB0070469B /* QuartzCore.framework */; };
+		175F6187163CDD9C006E76A7 /* RHPipeFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 175F6186163CDD9C006E76A7 /* RHPipeFlowLayout.m */; };
 		17757116163CA000003D49FD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17757115163CA000003D49FD /* UIKit.framework */; };
 		17757118163CA000003D49FD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17757117163CA000003D49FD /* Foundation.framework */; };
 		1775711A163CA000003D49FD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17757119163CA000003D49FD /* CoreGraphics.framework */; };
@@ -31,10 +36,18 @@
 		17757179163CA7B7003D49FD /* office.png in Resources */ = {isa = PBXBuildFile; fileRef = 17757177163CA7B7003D49FD /* office.png */; };
 		1775717C163CAA04003D49FD /* RHPipeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1775717B163CAA04003D49FD /* RHPipeCell.m */; };
 		17757181163CB875003D49FD /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1775717F163CB875003D49FD /* DataModel.xcdatamodeld */; };
-		17757184163CB981003D49FD /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 17757183163CB981003D49FD /* Message.m */; };
 		17757187163CB9AB003D49FD /* RHPusherManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 17757186163CB9AB003D49FD /* RHPusherManager.m */; };
 		177571D3163CBB4F003D49FD /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 177571D2163CBB4F003D49FD /* CoreData.framework */; };
 		177571D6163CC533003D49FD /* RHMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 177571D5163CC532003D49FD /* RHMessageCell.m */; };
+		177571DC163CCBDB003D49FD /* Pipeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 177571DB163CCBDB003D49FD /* Pipeline.m */; };
+		177571DF163CCBFE003D49FD /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 177571DE163CCBFE003D49FD /* Message.m */; };
+		1781B5A1163D38DB00FEE2C1 /* subtle_surface.png in Resources */ = {isa = PBXBuildFile; fileRef = 1781B59F163D38DB00FEE2C1 /* subtle_surface.png */; };
+		1781B5A2163D38DB00FEE2C1 /* subtle_surface@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1781B5A0163D38DB00FEE2C1 /* subtle_surface@2x.png */; };
+		17A4012B163D44DB0009CFD8 /* pipes.png in Resources */ = {isa = PBXBuildFile; fileRef = 17A40129163D44DB0009CFD8 /* pipes.png */; };
+		17A4012C163D44DB0009CFD8 /* pipes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 17A4012A163D44DB0009CFD8 /* pipes@2x.png */; };
+		17A40130163D452E0009CFD8 /* RHPacketCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 17A4012F163D452E0009CFD8 /* RHPacketCell.m */; };
+		17A40133163D49EC0009CFD8 /* pipe_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 17A40131163D49EC0009CFD8 /* pipe_back.png */; };
+		17A40134163D49EC0009CFD8 /* pipe_back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 17A40132163D49EC0009CFD8 /* pipe_back@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +61,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		17268F8E163D34510070469B /* RHComposeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHComposeViewController.h; sourceTree = "<group>"; };
+		17268F8F163D34510070469B /* RHComposeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHComposeViewController.m; sourceTree = "<group>"; };
+		17268F92163D34AD0070469B /* cardboard_flat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cardboard_flat.png; sourceTree = "<group>"; };
+		17268F93163D34AD0070469B /* cardboard_flat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cardboard_flat@2x.png"; sourceTree = "<group>"; };
+		17268F96163D34FB0070469B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		175F6185163CDD9C006E76A7 /* RHPipeFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHPipeFlowLayout.h; sourceTree = "<group>"; };
+		175F6186163CDD9C006E76A7 /* RHPipeFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHPipeFlowLayout.m; sourceTree = "<group>"; };
 		17757111163CA000003D49FD /* Tubes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tubes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17757115163CA000003D49FD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		17757117163CA000003D49FD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -97,13 +117,23 @@
 		1775717A163CAA04003D49FD /* RHPipeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHPipeCell.h; sourceTree = "<group>"; };
 		1775717B163CAA04003D49FD /* RHPipeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHPipeCell.m; sourceTree = "<group>"; };
 		17757180163CB875003D49FD /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
-		17757182163CB981003D49FD /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
-		17757183163CB981003D49FD /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		17757185163CB9AB003D49FD /* RHPusherManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHPusherManager.h; sourceTree = "<group>"; };
 		17757186163CB9AB003D49FD /* RHPusherManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHPusherManager.m; sourceTree = "<group>"; };
 		177571D2163CBB4F003D49FD /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		177571D4163CC532003D49FD /* RHMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHMessageCell.h; sourceTree = "<group>"; };
 		177571D5163CC532003D49FD /* RHMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHMessageCell.m; sourceTree = "<group>"; };
+		177571DA163CCBDA003D49FD /* Pipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pipeline.h; sourceTree = "<group>"; };
+		177571DB163CCBDB003D49FD /* Pipeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pipeline.m; sourceTree = "<group>"; };
+		177571DD163CCBFE003D49FD /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		177571DE163CCBFE003D49FD /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
+		1781B59F163D38DB00FEE2C1 /* subtle_surface.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = subtle_surface.png; sourceTree = "<group>"; };
+		1781B5A0163D38DB00FEE2C1 /* subtle_surface@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "subtle_surface@2x.png"; sourceTree = "<group>"; };
+		17A40129163D44DB0009CFD8 /* pipes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pipes.png; sourceTree = "<group>"; };
+		17A4012A163D44DB0009CFD8 /* pipes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pipes@2x.png"; sourceTree = "<group>"; };
+		17A4012E163D452E0009CFD8 /* RHPacketCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHPacketCell.h; sourceTree = "<group>"; };
+		17A4012F163D452E0009CFD8 /* RHPacketCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHPacketCell.m; sourceTree = "<group>"; };
+		17A40131163D49EC0009CFD8 /* pipe_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pipe_back.png; sourceTree = "<group>"; };
+		17A40132163D49EC0009CFD8 /* pipe_back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pipe_back@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +141,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17268F97163D34FB0070469B /* QuartzCore.framework in Frameworks */,
 				177571D3163CBB4F003D49FD /* CoreData.framework in Frameworks */,
 				17757174163CA118003D49FD /* libicucore.dylib in Frameworks */,
 				17757172163CA10E003D49FD /* SystemConfiguration.framework in Frameworks */,
@@ -139,6 +170,7 @@
 		17757106163CA000003D49FD = {
 			isa = PBXGroup;
 			children = (
+				17268F96163D34FB0070469B /* QuartzCore.framework */,
 				177571D2163CBB4F003D49FD /* CoreData.framework */,
 				17757173163CA118003D49FD /* libicucore.dylib */,
 				17757171163CA10E003D49FD /* SystemConfiguration.framework */,
@@ -181,16 +213,32 @@
 				1775712E163CA000003D49FD /* RHViewController.m */,
 				17757185163CB9AB003D49FD /* RHPusherManager.h */,
 				17757186163CB9AB003D49FD /* RHPusherManager.m */,
+				177571DA163CCBDA003D49FD /* Pipeline.h */,
+				177571DB163CCBDB003D49FD /* Pipeline.m */,
+				177571DD163CCBFE003D49FD /* Message.h */,
+				177571DE163CCBFE003D49FD /* Message.m */,
 				1775717F163CB875003D49FD /* DataModel.xcdatamodeld */,
-				17757182163CB981003D49FD /* Message.h */,
-				17757183163CB981003D49FD /* Message.m */,
 				1775717A163CAA04003D49FD /* RHPipeCell.h */,
+				17A4012E163D452E0009CFD8 /* RHPacketCell.h */,
+				17A4012F163D452E0009CFD8 /* RHPacketCell.m */,
 				1775717B163CAA04003D49FD /* RHPipeCell.m */,
+				175F6185163CDD9C006E76A7 /* RHPipeFlowLayout.h */,
+				175F6186163CDD9C006E76A7 /* RHPipeFlowLayout.m */,
+				17268F8E163D34510070469B /* RHComposeViewController.h */,
+				17268F8F163D34510070469B /* RHComposeViewController.m */,
 				177571D4163CC532003D49FD /* RHMessageCell.h */,
 				177571D5163CC532003D49FD /* RHMessageCell.m */,
 				17757175163CA156003D49FD /* RHConstants.h */,
 				17757176163CA7B6003D49FD /* office@2x.png */,
 				17757177163CA7B7003D49FD /* office.png */,
+				17268F92163D34AD0070469B /* cardboard_flat.png */,
+				1781B59F163D38DB00FEE2C1 /* subtle_surface.png */,
+				1781B5A0163D38DB00FEE2C1 /* subtle_surface@2x.png */,
+				17268F93163D34AD0070469B /* cardboard_flat@2x.png */,
+				17A40129163D44DB0009CFD8 /* pipes.png */,
+				17A4012A163D44DB0009CFD8 /* pipes@2x.png */,
+				17A40131163D49EC0009CFD8 /* pipe_back.png */,
+				17A40132163D49EC0009CFD8 /* pipe_back@2x.png */,
 				1775711C163CA000003D49FD /* Supporting Files */,
 			);
 			path = Tubes;
@@ -340,6 +388,14 @@
 				1775712C163CA000003D49FD /* Default-568h@2x.png in Resources */,
 				17757178163CA7B7003D49FD /* office@2x.png in Resources */,
 				17757179163CA7B7003D49FD /* office.png in Resources */,
+				17268F94163D34AD0070469B /* cardboard_flat.png in Resources */,
+				17268F95163D34AD0070469B /* cardboard_flat@2x.png in Resources */,
+				1781B5A1163D38DB00FEE2C1 /* subtle_surface.png in Resources */,
+				1781B5A2163D38DB00FEE2C1 /* subtle_surface@2x.png in Resources */,
+				17A4012B163D44DB0009CFD8 /* pipes.png in Resources */,
+				17A4012C163D44DB0009CFD8 /* pipes@2x.png in Resources */,
+				17A40133163D49EC0009CFD8 /* pipe_back.png in Resources */,
+				17A40134163D49EC0009CFD8 /* pipe_back@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,9 +435,13 @@
 				1775712F163CA000003D49FD /* RHViewController.m in Sources */,
 				1775717C163CAA04003D49FD /* RHPipeCell.m in Sources */,
 				17757181163CB875003D49FD /* DataModel.xcdatamodeld in Sources */,
-				17757184163CB981003D49FD /* Message.m in Sources */,
 				17757187163CB9AB003D49FD /* RHPusherManager.m in Sources */,
 				177571D6163CC533003D49FD /* RHMessageCell.m in Sources */,
+				177571DC163CCBDB003D49FD /* Pipeline.m in Sources */,
+				177571DF163CCBFE003D49FD /* Message.m in Sources */,
+				175F6187163CDD9C006E76A7 /* RHPipeFlowLayout.m in Sources */,
+				17268F90163D34510070469B /* RHComposeViewController.m in Sources */,
+				17A40130163D452E0009CFD8 /* RHPacketCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,15 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
+//#import <CoreData/CoreData.h>
 
-@class Pipeline;
+//@class Pipeline;
 
-@interface Message : NSManagedObject
+enum MessageType {
+    kMessageTypeInput = 0,
+    kMessageTypeOutput,
+    kMessageTypeProcessing,
+    kMessageTypeFinished
+    };
 
-@property (nonatomic, retain) NSString * payload;
+@interface Message : NSObject
+
+@property (nonatomic, retain) NSString * messageId;
 @property (nonatomic, retain) NSString * target;
 @property (nonatomic, retain) NSString * sender;
-@property (nonatomic, retain) Pipeline *pipeline;
+@property (nonatomic, retain) NSString * payload;
+@property (nonatomic) NSInteger type;
+//@property (nonatomic, retain) Pipeline *pipeline;
 
 @end

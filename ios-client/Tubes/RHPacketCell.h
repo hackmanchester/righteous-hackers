@@ -1,5 +1,5 @@
 //
-//  RHMessageCell.h
+//  RHPacketCell.h
 //  Tubes
 //
 //  Created by James Frost on 28/10/2012.
@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RHMessageCell : UICollectionViewCell
-
-@property (nonatomic, strong) UILabel *titleLabel;
+@interface RHPacketCell : UITableViewCell
+@property (nonatomic, strong) UILabel *label;
 
 @end

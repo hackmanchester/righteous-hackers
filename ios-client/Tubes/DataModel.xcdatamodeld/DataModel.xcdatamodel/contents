@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="12C60" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Message" representedClassName="Message" syncable="YES">
-        <attribute name="messageId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="payload" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sender" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="target" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="pipeline" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Pipeline" inverseName="messages" inverseEntity="Pipeline" syncable="YES"/>
+    </entity>
+    <entity name="Pipeline" representedClassName="Pipeline" syncable="YES">
+        <attribute name="messageId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Message" inverseName="pipeline" inverseEntity="Message" syncable="YES"/>
     </entity>
     <elements>
         <element name="Message" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="Pipeline" positionX="-189" positionY="186" width="128" height="73"/>
     </elements>
 </model>

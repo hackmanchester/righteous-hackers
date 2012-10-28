@@ -8,9 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RHPipeCell : UITableViewCell <UICollectionViewDataSource, UICollectionViewDelegate>
+@class Message;
+
+@interface RHPipeCell : UITableViewCell <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic) NSInteger numberOfPipes;
 @property (strong, nonatomic) UICollectionView *collectionView;
+@property (nonatomic, retain) NSMutableArray *messages;
+
+- (void)addMessage:(Message *)message;
 
 @end

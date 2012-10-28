@@ -8,6 +8,10 @@
 
 #import "RHMessageCell.h"
 
+@interface RHMessageCell ()
+@end
+
+
 @implementation RHMessageCell
 
 - (id)initWithFrame:(CGRect)frame
@@ -15,7 +19,12 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.backgroundColor = [UIColor blueColor];
+        self.backgroundColor = [UIColor yellowColor];
+        
+        self.titleLabel = [[UILabel alloc] initWithFrame:self.bounds];
+        self.titleLabel.numberOfLines = 0;
+        self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        [self addSubview:self.titleLabel];
     }
     return self;
 }

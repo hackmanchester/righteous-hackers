@@ -9,8 +9,15 @@
 #import <Foundation/Foundation.h>
 #import "PTPusher.h"
 
+@class Message;
+
+@protocol RHPusherManagerDelegate <NSObject>
+- (void)pusherManagerDidReceiveMessage:(Message *)message;
+@end
+
 @interface RHPusherManager : NSObject <PTPusherDelegate>
 
+@property (nonatomic, weak) id <RHPusherManagerDelegate> delegate;
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
@@ -22,5 +29,7 @@
 - (NSFetchedResultsController *)fetchedResultsControllerForMessageIds;
 - (NSArray *)listOfMessages;
 - (NSSet *)listOfMessageIds;
+
+- (void)sendMessage:(NSString *)message;
 
 @end

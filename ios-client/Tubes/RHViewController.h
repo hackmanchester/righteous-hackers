@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RHPusherManager.h"
+#import "RHComposeViewController.h"
 
-@interface RHViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate>
+@interface RHViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RHPusherManagerDelegate, RHComposeViewControllerDelegate>
 
 @end
