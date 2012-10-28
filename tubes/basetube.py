@@ -17,6 +17,11 @@ class BaseTube(object):
     pusherclient = None
     sleep_length = 1
     
+    languages = "Python"
+    transports = None
+    protocols = None
+    encodings = None
+    
     def __init__(self, name):
         self.name = name
         self.connect()
@@ -61,8 +66,21 @@ class BaseTube(object):
     def return_message(self, message):
         if 'target' in message:
             del(message['target'])
+        message = self.append_appendix(message)
         message['sender'] = self.name
         self.pusher[self.CHANNEL_NAME].trigger("output", message)
+    
+    def append_appendix(self, message):
+        if self.languages:
+            message['payload'] += "\nLanguages: %s\n" % self.languages
+        if self.protocols:
+            message['payload'] += "\nProtocols: %s\n" % self.protocols
+        if self.transports:
+            message['payload'] += "\nTransports: %s\n" % self.transports
+        if self.encodings:
+            message['payload'] += "\nEncodings: %s\n" % self.encodings
+        
+        return message
     
     def processing(self, message, encoding_scheme, encoded_payload):
         message['encoding_scheme'] = encoding_scheme

@@ -29,6 +29,11 @@ class LaunchpadTube(BaseTube):
     ciphertext = None
     sleep_length = 0.05
     
+    protocols = "MIDI, USB"
+    languages = "Python"
+    transports = "Human data-entry"
+    encodings = "Encrypted"
+    
     def __init__(self, *args, **kwargs):
         super(LaunchpadTube, self).__init__(*args, **kwargs)
         self.reset_key()
@@ -77,7 +82,7 @@ class LaunchpadTube(BaseTube):
         key_grid = self.display_key(key)
         self.processing(message, "Key", str(key))
         self.ciphertext = self.get_ciphertext(key, payload)
-        self.processing(message, "ciphertext", str(self.ciphertext))
+        self.processing(message, "ciphertext", "".join([chr(c) for c in self.ciphertext]))
         log.debug(key_grid)
         # self.return_message(message)
     

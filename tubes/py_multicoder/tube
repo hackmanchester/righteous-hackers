@@ -14,7 +14,8 @@ log = logging.getLogger(__name__)
 class MulticoderTube(BaseTube):
     def handle(self, message):
         payload = message['payload']
-        newPayload = self.safe_unicode(msg.encode('hex'))
+        # newPayload = self.safe_unicode(payload.encode('hex'))
+        newPayload = self.hexEncode(payload, message)
         self.processing(message, "Hex", newPayload)
         
         message['payload'] = newPayload
@@ -41,7 +42,7 @@ class MulticoderTube(BaseTube):
         self.processing(message, "Punycode", self.safe_unicode(msg.encode('punycode', 'replace')))
         return msg+' Punycode.'
     
-    def safe_unicode(obj, *args):
+    def safe_unicode(self, obj, *args):
         try:
             return unicode(obj, *args)
         except UnicodeDecodeError:
